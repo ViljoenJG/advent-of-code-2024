@@ -31,7 +31,7 @@ defmodule AdventOfCode.Year2024.Day3.Solution do
     |> then(&process(&1, true, 0))
   end
 
-  defp process(value, running, acc)
+  defp process(stack, running, acc)
 
   defp process([:off | tail], _, acc) do
     process(tail, false, acc)

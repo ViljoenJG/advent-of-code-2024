@@ -20,7 +20,8 @@ defmodule AdventOfCode.Year2024.Day3.Solution do
   end
 
   defp solve_part2(input) do
-    Regex.replace(~r/(*CR)don't\(\).*?do\(\)/, input, "")
+    input
+    |> String.replace(~r/(*CR)don't\(\).*?do\(\)/, "")
     |> solve_part1
   end
 end

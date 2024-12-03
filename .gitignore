@@ -30,3 +30,4 @@ f-*.tar
 input.txt
 part1.md
 part2.md
+.DS_Store

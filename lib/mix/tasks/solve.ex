@@ -22,12 +22,12 @@ defmodule Mix.Tasks.Solve do
         Benchee.run(%{
           "part_#{part}" => fn ->
             execute_solution(year, day, part)
-            |> IO.inspect(label: "Day #{day}, Part #{part} result: ")
+            |> log_result("Day #{day}, Part #{part} result")
           end
         }),
       else:
         execute_solution(year, day, part)
-        |> IO.inspect(label: "Day #{day}, Part #{part} result: ")
+        |> log_result("Day #{day}, Part #{part} result")
   end
 
   defp execute_solution(year, day, part) do
@@ -48,13 +48,18 @@ defmodule Mix.Tasks.Solve do
       if function in @valid_parts do
         apply(module, function, [input])
       else
-        Mix.shell().error("Invalid part number: #{part}")
+        error("Invalid part number: #{part}")
         nil
       end
     rescue
       error in [ArgumentError, UndefinedFunctionError] ->
-        Mix.shell().error("Error: #{Exception.message(error)}")
+        error("Error: #{Exception.message(error)}")
         nil
     end
   end
+
+  defp log_result(result, message), do: log("#{message}: #{result}", :info)
+  defp error(message), do: log(message, :error)
+  defp log(message, :info), do: Mix.shell().info(message)
+  defp log(message, :error), do: Mix.shell().error(message)
 end

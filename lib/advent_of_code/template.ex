@@ -31,7 +31,6 @@ defmodule AdventOfCode.Template do
 
       end
 
-      # Update the parse function to match the input format
       defp parse(input) do
         input
         |> Utils.parse()

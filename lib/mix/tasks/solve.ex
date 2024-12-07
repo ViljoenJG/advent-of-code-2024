@@ -17,23 +17,28 @@ defmodule Mix.Tasks.Solve do
 
     Utils.setup_env!()
 
+    puzzle_input = read_input_file(year, day)
+
     if opts[:benchmark],
       do:
-        Benchee.run(%{
-          "part_#{part}" => fn ->
-            execute_solution(year, day, part)
-            |> log_result("Day #{day}, Part #{part} result")
-          end
-        }),
+        Benchee.run(
+          %{
+            "Part #{part}" => fn input -> execute_solution(input, year, day, part) end
+          },
+          print: [benchmarking: false],
+          inputs: [{"Day #{day} puzzle input", puzzle_input}]
+        ),
       else:
-        execute_solution(year, day, part)
+        execute_solution(puzzle_input, year, day, part)
         |> log_result("Day #{day}, Part #{part} result")
   end
 
-  defp execute_solution(year, day, part) do
+  defp read_input_file(year, day) do
     base_path = Utils.get_base_path(year, day)
-    input = File.read!("#{base_path}/input.txt")
+    File.read!("#{base_path}/input.txt")
+  end
 
+  defp execute_solution(input, year, day, part) do
     try do
       module =
         Module.safe_concat([

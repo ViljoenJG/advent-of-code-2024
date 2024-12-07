@@ -25,10 +25,9 @@ defmodule AdventOfCode.Year2024.Day7.Solution do
     |> Enum.sum()
   end
 
-  defp calculate(a, _rest, result, _with_concat) when a > result, do: false
-
   defp calculate(a, [b | rest], result, with_concat) do
     cond do
+      a > result -> false
       calculate(a + b, rest, result, with_concat) -> true
       calculate(a * b, rest, result, with_concat) -> true
       with_concat and calculate(concat(a, b), rest, result, with_concat) -> true

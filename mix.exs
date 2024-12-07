@@ -25,7 +25,8 @@ defmodule AdventOfCode.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mock, "~> 0.3.0", only: :test},
       {:html2markdown, "~> 0.1.5"},
-      {:benchee, "~> 1.0"}
+      {:benchee, "~> 1.0"},
+      {:memoize, "~> 1.4"}
     ]
   end
 end

@@ -25,6 +25,8 @@ defmodule AdventOfCode.Year2024.Day7.Solution do
     |> Enum.sum()
   end
 
+  defp calculate(a, _rest, result, _with_concat) when a > result, do: false
+
   defp calculate(a, [b | rest], result, with_concat) do
     cond do
       calculate(a + b, rest, result, with_concat) -> true
@@ -48,7 +50,7 @@ defmodule AdventOfCode.Year2024.Day7.Solution do
     |> Utils.parse()
     |> Enum.map(&Utils.parse(&1, ": ", trim: true))
     |> Enum.map(fn [ans, eq] ->
-      {String.to_integer(ans), Utils.parse_int(eq, ~r/\s{1,}/)}
+      {String.to_integer(ans), Utils.parse_int(eq, " ")}
     end)
   end
 end

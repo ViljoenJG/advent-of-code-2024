@@ -29,7 +29,8 @@ defmodule AdventOfCode.Year2024.Day7.Solution do
     cond do
       calculate(a + b, rest, result, with_concat) -> true
       calculate(a * b, rest, result, with_concat) -> true
-      true -> with_concat and calculate(concat(a, b), rest, result, with_concat)
+      with_concat and calculate(concat(a, b), rest, result, with_concat) -> true
+      true -> false
     end
   end
 

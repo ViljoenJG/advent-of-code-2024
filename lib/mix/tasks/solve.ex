@@ -17,49 +17,47 @@ defmodule Mix.Tasks.Solve do
 
     Utils.setup_env!()
 
-    puzzle_input = read_input_file(year, day)
-
-    if opts[:benchmark],
-      do:
-        Benchee.run(
-          %{
-            "Part #{part}" => fn input -> execute_solution(input, year, day, part) end
-          },
-          print: [benchmarking: false],
-          inputs: [{"Day #{day} puzzle input", puzzle_input}]
-        ),
-      else:
-        execute_solution(puzzle_input, year, day, part)
-        |> log_result("Day #{day}, Part #{part} result")
+    input = read_input_file!(year, day)
+    solution = solution_function(year, day, part)
+    benchmark = if opts[:benchmark], do: true, else: false
+    execute(input, solution, benchmark)
   end
 
-  defp read_input_file(year, day) do
+  defp read_input_file!(year, day) do
     base_path = Utils.get_base_path(year, day)
     File.read!("#{base_path}/input.txt")
   end
 
-  defp execute_solution(input, year, day, part) do
-    try do
-      module =
-        Module.safe_concat([
-          "AdventOfCode",
-          "Year#{year}",
-          "Day#{String.to_integer(day)}",
-          "Solution"
-        ])
+  defp solution_function(year, day, part) do
+    module =
+      Module.safe_concat([
+        "AdventOfCode",
+        "Year#{year}",
+        "Day#{String.to_integer(day)}",
+        "Solution"
+      ])
 
-      function = String.to_existing_atom("part#{part}")
+    {module, String.to_existing_atom("part#{part}")}
+  end
 
-      if function in @valid_parts do
-        apply(module, function, [input])
-      else
-        error("Invalid part number: #{part}")
-        nil
-      end
-    rescue
-      error in [ArgumentError, UndefinedFunctionError] ->
-        error("Error: #{Exception.message(error)}")
-        nil
+  defp execute(input, {module, function}, false) do
+    execute_solution(input, module, function)
+    |> log_result("#{function} result")
+  end
+
+  defp execute(input, {module, function}, true) do
+    Benchee.run(
+      %{"Part #{function}" => fn input -> execute_solution(input, module, function) end},
+      print: [benchmarking: false],
+      inputs: [{"puzzle input", input}]
+    )
+  end
+
+  defp execute_solution(input, module, function) do
+    if function in @valid_parts do
+      apply(module, function, [input])
+    else
+      error("Invalid part: #{function}")
     end
   end
 

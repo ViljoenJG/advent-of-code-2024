@@ -5,12 +5,14 @@ defmodule AdventOfCode.Year2024.Day9.Solution do
     input
     |> parse
     |> solve_part1()
+    |> checksum()
   end
 
   def part2(input) do
     input
     |> parse
     |> solve_part2()
+    |> checksum()
   end
 
   def solve_part1(input) do
@@ -24,7 +26,7 @@ defmodule AdventOfCode.Year2024.Day9.Solution do
       |> Enum.filter(&(&1 != :free))
       |> Enum.reverse()
 
-    merge(compacted_blocks, blocks_to_move) |> checksum()
+    merge(compacted_blocks, blocks_to_move)
   end
 
   def solve_part2(input) do
@@ -61,7 +63,6 @@ defmodule AdventOfCode.Year2024.Day9.Solution do
     end)
     |> Enum.sort_by(fn {start, _, _} -> start end)
     |> expand()
-    |> checksum()
   end
 
   def compact_free(blocks_set) do
